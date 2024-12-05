@@ -1,0 +1,269 @@
+// 6.1 Rewrite the superclass and its subclasses , and , as shown in the class diagram.ShapeCircleRectangleSquare
+
+public abstract class Shape {
+    protected String color = "red";
+    protected boolean filled = true;
+
+    public Shape() {}
+
+    public Shape(String color, boolean filled) {
+        this.color = color;
+        this.filled = filled;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public boolean isFilled() {
+        return filled;
+    }
+
+    public void setFilled(boolean filled) {
+        this.filled = filled;
+    }
+
+    @Override
+    public String toString() {
+        return "Shape[color=" + color + ",filled=" + filled + "]";
+    }
+
+    public abstract double getArea();
+    public abstract double getPerimeter();
+}
+
+public class Circle extends Shape {
+    protected double radius = 1.0;
+
+    // ... construtores e métodos ...
+    @Override
+    public double getArea() {
+        return Math.PI * radius * radius;
+    }
+
+    @Override
+    public double getPerimeter() {
+        return 2 * Math.PI * radius;
+    }
+}
+
+// 6.2 Write an interface called , which contains 2 methods: and , as shown in the class diagram. Also write an implementation class called . Mark all the overridden methods with annotation .GeometricObjectabstractgetArea()getPerimeter()Circle@Override
+
+public interface GeometricObject {
+    double getArea();
+    double getPerimeter();
+}
+
+public class Circle implements GeometricObject {
+    private double radius;
+
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+
+    @Override
+    public double getArea() {
+        return Math.PI * radius * radius;
+    }
+
+    @Override
+    public double getPerimeter() {
+        return 2 * Math.PI * radius;
+    }
+
+    @Override
+    public String toString() {
+        return "Circle[radius=" + radius + "]";
+    }
+}
+
+// 6.3  nWrite an interface called Moveable, which contains 4 abstract methods moveUp(), moveDown(), moveLeft() and moveRight(), as shown in the class diagram. Also write an implementation class called MovablePoint. Mark all the overridden methods with annotation @Override.
+
+public interface Movable {
+    void moveUp();
+    void moveDown();
+    void moveLeft();
+    void moveRight();
+}
+
+public class MovablePoint implements Movable {
+    int x;
+    int y;
+    int xSpeed;
+    int ySpeed;
+
+    public MovablePoint(int x, int y, int xSpeed, int ySpeed) {
+        this.x = x;
+        this.y = y;
+        this.xSpeed = xSpeed;
+        this.ySpeed = ySpeed;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ") speed=(" + xSpeed + ", " + ySpeed + ")";
+    }
+
+    @Override
+    public void moveUp() {
+        y -= ySpeed;
+    }
+
+    @Override
+    public void moveDown() {
+        y += ySpeed;
+    }
+
+    @Override
+    public void moveLeft() {
+        x -= xSpeed;
+    }
+
+    @Override
+    public void moveRight() {
+        x += xSpeed;
+    }
+}
+
+MovablePoint point = new MovablePoint(5, 6, 10, 15);
+System.out.println(point); // Imprime: (5, 6) speed=(10, 15)
+
+point.moveUp();
+point.moveRight();
+System.out.println(point); // Imprime: (15, -9) speed=(10, 15)
+
+// 6.5  Ex: Interfaces Resizable and GeometricObject
+
+public interface GeometricObject {
+    double getArea();
+    double getPerimeter();
+}
+
+public class Circle implements GeometricObject {
+    protected double radius;
+
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+
+    @Override
+    public double getArea() {
+        return Math.PI * radius * radius;
+    }
+
+    @Override
+    public double getPerimeter() {
+        return 2 * Math.PI * radius;
+    }
+
+    @Override
+    public String toString() {
+        return "Circle[radius=" + radius + "]";
+    }
+}
+
+public interface Resizable {
+    void resize(int percent);
+}
+
+public class ResizableCircle extends Circle implements Resizable {
+    public ResizableCircle(double radius) {
+        super(radius);
+    }
+
+    @Override
+    public void resize(int percent) {
+        radius = radius * (1 + percent / 100.0);
+    }
+
+    @Override
+    public String toString() {
+        return "ResizableCircle[" + super.toString() + "]";
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        ResizableCircle circle = new ResizableCircle(5);
+        System.out.println(circle); // Imprime: ResizableCircle[Circle[radius=5.0]]
+
+        circle.resize(10); // Aumenta o raio em 10%
+        System.out.println(circle); // Imprime: ResizableCircle[Circle[radius=5.5]]
+    }
+}
+
+// 
+
+public abstract class Animal {
+    protected String name;
+
+    public Animal(String name) {
+        this.name = name;
+    }
+
+    public abstract void greets();
+}
+
+public class Cat extends Animal {
+    public Cat(String name) {
+        super(name);
+    }
+
+    @Override
+    public void greets() {
+        System.out.println("Meow");
+    }
+}
+
+public class Dog extends Animal {
+    public Dog(String name) {
+        super(name);
+    }
+
+    @Override
+    public void greets() {
+        System.out.println("Woof");
+    }
+
+    public void greets(Dog anotherDog) {
+        System.out.println("Woof");
+    }
+}
+
+public class BigDog extends Dog {
+    public BigDog(String name) {
+        super(name);
+    }
+
+    @Override
+    public void greets() {
+        System.out.println("Wooof");
+    }
+
+    @Override
+    public void greets(Dog anotherDog) {
+        System.out.println("Wooooof");
+    }
+
+    public void greets(BigDog anotherBigDog) {
+        System.out.println("Wooooooooof");
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Animal cat = new Cat("Whiskers");
+        Dog dog = new Dog("Fido");
+        BigDog bigDog = new BigDog("Max");
+
+        cat.greets();
+        dog.greets();
+        bigDog.greets();
+        dog.greets(bigDog);
+        bigDog.greets(bigDog);
+    }
+}
